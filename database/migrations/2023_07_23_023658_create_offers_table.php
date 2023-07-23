@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
-	    $table->string('company');
+            $table->string('company');
             $table->string('title');
             $table->enum('type', ['pfe', 'pfa', 'observation', 'part-time']);
             $table->string('attendance');
@@ -23,8 +23,8 @@ return new class extends Migration
             $table->string('tags');
             $table->text('description')->nullable();
             $table->unsignedBigInteger('created_by');
-	    $table->foreign('created_by')->references('id')->on('users');
-    
+            $table->foreign('created_by')->references('id')->on('users');
+
             $table->timestamps();
         });
     }

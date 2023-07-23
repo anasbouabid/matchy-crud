@@ -30,15 +30,15 @@ class OfferController extends Controller
     public function store(Request $request)
     {
         $offer = new Offer();
-        $offer->company = $request->input('company');
-        $offer->title = $request->input('title');
-        $offer->type = $request->input('type');
-        $offer->attendance = $request->input('attendance');
-        $offer->period = $request->input('period');
-        $offer->gratifications = $request->input('gratifications');
-        $offer->tags = $request->input('tags');
-        $offer->description = $request->input('description');
-        $offer->created_by = $request->input('created_by'); // Assuming you pass the user ID in the request
+        $offer->company = $request->company;
+        $offer->title = $request->title;
+        $offer->type = $request->type;
+        $offer->attendance = $request->get('attendance');
+        $offer->period = $request->get('period');
+        $offer->gratifications = $request->get('gratifications');
+        $offer->tags = $request->get('tags');
+        $offer->description = $request->get('description');
+        $offer->created_by = $request->get('created_by'); // Assuming you pass the user ID in the request
 
         $offer->save();
 
@@ -55,15 +55,15 @@ class OfferController extends Controller
         }
 
         // Update offer data
-        $offer->company = $request->input('company');
-        $offer->title = $request->input('title');
-        $offer->type = $request->input('type');
-        $offer->attendance = $request->input('attendance');
-        $offer->period = $request->input('period');
-        $offer->gratifications = $request->input('gratifications');
-        $offer->tags = $request->input('tags');
-        $offer->description = $request->input('description');
-        
+        $offer->company = $request->get('company');
+        $offer->title = $request->get('title');
+        $offer->type = $request->get('type');
+        $offer->attendance = $request->get('attendance');
+        $offer->period = $request->get('period');
+        $offer->gratifications = $request->get('gratifications');
+        $offer->tags = $request->get('tags');
+        $offer->description = $request->get('description');
+
         $offer->save();
 
         return response()->json($offer);
