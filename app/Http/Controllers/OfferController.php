@@ -39,7 +39,6 @@ class OfferController extends Controller
         $offer->tags = $request->get('tags');
         $offer->description = $request->get('description');
         $offer->created_by = $request->get('created_by'); // Assuming you pass the user ID in the request
-
         $offer->save();
 
         return response()->json($offer, 201);

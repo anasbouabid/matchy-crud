@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -16,7 +17,7 @@ class AuthController extends Controller
             'email' => 'required|string|unique:users,email',
             'name' => 'required|string',
 
-            'password' => 'required|string|confirmed',
+            'password' => 'required|string',
         ]);
 
 
@@ -27,6 +28,34 @@ class AuthController extends Controller
             'password' => bcrypt($fields['password'])
         ]);
         $user->assignRole('hr');
+        // event(new Registered($user));
+        $token = $user->createToken('myapptoken')->plainTextToken;
+
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+
+        return response($response, 201);
+    }
+    public function registerStudent(Request $request)
+    {
+
+        $fields = $request->validate([
+            'email' => 'required|string|unique:users,email',
+            'name' => 'required|string',
+
+            'password' => 'required|string',
+        ]);
+
+
+        $user = User::create([
+            'email' => $fields['email'],
+            'name' => $fields['name'],
+
+            'password' => bcrypt($fields['password'])
+        ]);
+        $user->assignRole('student');
         // event(new Registered($user));
         $token = $user->createToken('myapptoken')->plainTextToken;
 
@@ -61,34 +90,27 @@ class AuthController extends Controller
 
         return response($response, 201);
     }
-    public function registerClient(Request $request)
+
+    public function uploadResume(Request $request)
     {
-        $fields = $request->validate([
-            'email' => 'required|string|unique:users,email',
-            'entite' => 'required|string',
-            'nom' => 'required|string',
-            'prenom' => 'required|string',
-            'password' => 'required|string|confirmed',
+
+        $id = Auth::user()->id;
+        $request->validate([
+            'resume' => 'required|mimes:pdf',
         ]);
 
+        if ($file = request()->file('resume')) {
+            $name = $file->getClientOriginalName();
+            $file->move(public_path('offre_commercial/'), $name);
+            $url = url('/offre_commercial/' . $name);
 
-        $user = User::create([
-            'email' => $fields['email'],
-            'nom' => $fields['nom'],
-            'prenom' => $fields['prenom'],
-            'password' => bcrypt($fields['password'])
-        ]);
-        $user->assignRole('client');
-        event(new Registered($user));
-        $token = $user->createToken('myapptoken')->plainTextToken;
+            $user = User::find($id);
+            $user->resumeurl = $url;
+            $user->save();
 
-        $response = [
-            'success' => true,
-            'message' => "client created successfully",
-            'user' => $user,
-            'token' => $token
-        ];
+            return response()->json(['message' => 'Resume uploaded successfully']);
+        }
 
-        return response($response, 201);
+        return response()->json(['message' => 'File upload failed'], 500);
     }
 }

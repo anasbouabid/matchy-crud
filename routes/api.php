@@ -17,10 +17,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register-student', [AuthController::class, 'registerStudent']);
 Route::post('/login', [AuthController::class, 'login']);
+
 
 Route::resource('offres', OfferController::class);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/upload-resume', [AuthController::class, 'uploadResume']);
 });
