@@ -17,11 +17,14 @@ return new class extends Migration
             $table->string('title');
             $table->enum('type', ['pfe', 'pfa', 'observation', 'part-time']);
             $table->string('attendance');
-            // perion in num of weeks
+            // period in num of weeks
             $table->integer('period');
             $table->double('gratifications');
             $table->string('tags');
             $table->text('description')->nullable();
+            $table->unsignedBigInteger('created_by');
+	    $table->foreign('created_by')->references('id')->on('users');
+    
             $table->timestamps();
         });
     }
