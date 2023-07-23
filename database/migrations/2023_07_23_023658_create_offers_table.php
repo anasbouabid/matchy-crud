@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
+	    $table->string('company');
+            $table->string('title');
+            $table->enum('type', ['pfe', 'pfa', 'observation', 'part-time']);
+            $table->string('attendance');
+            // perion in num of weeks
+            $table->integer('period');
+            $table->double('gratifications');
+            $table->string('tags');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
